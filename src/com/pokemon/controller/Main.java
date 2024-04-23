@@ -3,10 +3,13 @@ package com.pokemon.controller;
 import java.awt.Frame;
 import java.awt.Graphics;
 
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 public class Main {
     FrameController frame;
     public Main() {
-        Frame frames = new Frame();
+        // Frame frames = new Frame();
         frame = new FrameController();
         Time time = new Time();
         time.start();

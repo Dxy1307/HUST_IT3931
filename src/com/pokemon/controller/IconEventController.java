@@ -60,7 +60,6 @@ public class IconEventController extends JPanel implements ActionListener {
         int width = 48;
         int height = 60;
         Image image = new ImageIcon("src/com/pokemon/icon/" + index + ".png").getImage();
-        // Image image = new ImageIcon(getClass().getResource("/icon/" + index + ".png")).getImage();
         Icon icon = new ImageIcon(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
         return icon;
     }
@@ -85,8 +84,19 @@ public class IconEventController extends JPanel implements ActionListener {
         btn.setEnabled(false);
     }
 
+    public void shuffleGraphicsPanel() {
+        initMatrixController.shuffleMatrix();
+        for(int i = 1; i < row - 1; ++i) {
+            for(int j = 1; j < col - 1; ++j) {
+                Icon icon = getIcon(initMatrixController.getMatrix()[i][j]);
+                btn[i][j].setIcon(icon);
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        LinePanel linePanel = new LinePanel();
         String btnIndex = e.getActionCommand();
         int indexDot = btnIndex.lastIndexOf(",");
         int x = Integer.parseInt(btnIndex.substring(0, indexDot));
@@ -94,7 +104,7 @@ public class IconEventController extends JPanel implements ActionListener {
 
         if(p1 == null) {
             p1 = new Point(x, y);
-            btn[p1.x][p1.y].setBorder(new LineBorder(Color.red));
+            btn[p1.x][p1.y].setBorder(new LineBorder(Color.red, 3));
         } else {
             p2 = new Point(x, y);
             System.out.println("(" + p1.x + "," + p1.y + ")" + "--> " + "(" + p2.x + "," + p2.y + ")");
@@ -104,6 +114,9 @@ public class IconEventController extends JPanel implements ActionListener {
                 initMatrixController.getMatrix()[p1.x][p1.y] = 0;
                 initMatrixController.getMatrix()[p2.x][p2.y] = 0;
                 initMatrixController.showMatrix();
+
+                linePanel.setPoints(p1, p2);
+
                 execute(p1, p2);
                 line = null;
                 score += 10;
@@ -114,6 +127,9 @@ public class IconEventController extends JPanel implements ActionListener {
             btn[p1.x][p1.y].setBorder(null);
             p1 = null;
             p2 = null;
+
+            linePanel.setPoints(null, null);
+
             System.out.println("done");
             if(item == 0) {
                 frame.showDialogNewGame("Win!\nDo you want play again?", "Win", 1);

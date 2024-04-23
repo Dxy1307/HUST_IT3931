@@ -19,6 +19,25 @@ public class InitMatrixController {
         showMatrix();
     }
 
+    public void shuffleMatrix() {
+        Random rand = new Random();
+        for(int i = row - 2; i >= 1; i--) {
+            for(int j = col - 2; j >= 1; j--) {
+                if(matrix[i][j] == 0) {
+                    continue;
+                }
+                int i1 = rand.nextInt(i + 1);
+                int j1 = rand.nextInt(j + 1);
+
+                if(matrix[i1][j1] != 0) {
+                    int temp = matrix[i][j];
+                    matrix[i][j] = matrix[i1][j1];
+                    matrix[i1][j1] = temp;
+                }
+            }
+        }
+    }
+
     public void showMatrix() {
         for(int i = 1; i < row - 1; i++) {
             for(int j = 1; j < col - 1; j++) {
@@ -26,6 +45,19 @@ public class InitMatrixController {
             }
             System.out.println();
         }
+    }
+
+    public void drawLine(Point p1, Point p2, Graphics g) {
+        if(g == null) {
+            System.out.println("Graphics context is null");
+            return;
+        }
+        g.setColor(Color.RED);
+        int x1 = p1.y * 60 + 48 / 2;
+        int y1 = p1.x * 48 + 60 / 2;
+        int x2 = p2.y * 60 + 48 / 2;
+        int y2 = p2.x * 48 + 60 / 2;
+        g.drawLine(x1, y1, x2, y2);
     }
 
     private boolean checkLineX(int y1, int y2, int x) {
@@ -76,7 +108,7 @@ public class InitMatrixController {
                 return false;
             }
 
-            if((matrix[pMaxy.x][y] == 0) && checkLineY(pMiny.x, pMaxy.x, y) && checkLineX(y, pMaxy.y, pMaxy.y)) {
+            if((matrix[pMaxy.x][y] == 0) && checkLineY(pMiny.x, pMaxy.x, y) && checkLineX(y, pMaxy.y, pMaxy.x)) {
                 System.out.println("Rect x");
                 System.out.println("(" + pMiny.x + "," + pMiny.y + ") -> ("
                         + pMiny.x + "," + y + ") -> (" + pMaxy.x + "," + y
@@ -184,7 +216,8 @@ public class InitMatrixController {
             if(p1.x == p2.x) {
                 System.out.println("line x");
                 if(checkLineX(p1.y, p2.y, p1.x)) {
-
+                    System.out.println("ok line x");
+                    // drawLine(p1, p2, component.getGraphics());
                     return new PointLine(p1, p2);
                 }
             }
@@ -193,7 +226,7 @@ public class InitMatrixController {
                 System.out.println("line y");
                 if(checkLineY(p1.x, p2.x, p1.y)) {
                     System.out.println("ok line y");
-
+                    drawLine(p1, p2, null);
                     return new PointLine(p1, p2);
                 }
             }
