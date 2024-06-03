@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.Random;
 
 public class FrameController extends JFrame implements ActionListener, Runnable {
-    private int row = 9;
-    private int col = 16;
+    private int row = 4;
+    private int col = 4;
     private int width = 1200;
     private int height = 800;
     private IconEventController graphicsPanel;
@@ -69,6 +69,14 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
 
     private JPanel createGraphicsPanel() {
         graphicsPanel = new IconEventController(this, row, col);
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        panel.add(graphicsPanel);
+        return panel;
+    }
+
+    private JPanel continueGraphicsPanel() {
+        graphicsPanel.continueGraphicsPanel(this, row, col);
         JPanel panel = new JPanel(new GridBagLayout());
 
         panel.add(graphicsPanel);
@@ -160,17 +168,28 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
         lbScore.setText("0");
     }
 
+    public void continueGame() {
+        time = MAX_TIME;
+        graphicsPanel.removeAll();
+        mainPanel.add(continueGraphicsPanel(), BorderLayout.CENTER);
+        mainPanel.validate();
+        mainPanel.setVisible(true);
+    }
+
     public void showDialogNewGame(String message, String title, int t) {
         pause = true;
         resume = false;
         int select = JOptionPane.showOptionDialog(null, message, title, JOptionPane.YES_NO_OPTION, 
                                                     JOptionPane.QUESTION_MESSAGE, null, null, null);
-        if(select == 0) {
+        if(select == 0 && t == 0) {
             pause = false;
             newGame();
         } else {
             if(t == 1) {
-                System.exit(0);
+                // System.exit(0);
+                // pause = false;
+                resume = true;
+                continueGame();
             } else {
                 resume = true;
             }

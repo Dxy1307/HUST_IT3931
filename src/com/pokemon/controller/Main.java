@@ -33,7 +33,7 @@ public class Main {
                     frame.time--;
                 }
                 if(frame.time == 0) {
-                    frame.showDialogNewGame("Full time\nDo you want play again?", "Lose", 1);
+                    frame.showDialogNewGame("Full time\nDo you want play again?", "Lose", 0);
                 }
             }
         }
