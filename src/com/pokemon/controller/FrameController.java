@@ -13,16 +13,17 @@ import java.io.IOException;
 import java.util.Random;
 
 public class FrameController extends JFrame implements ActionListener, Runnable {
-    private int row = 4;
-    private int col = 4;
+    private int row = 9;
+    private int col = 16;
     private int width = 1200;
-    private int height = 800;
+    private int height = 900;
     private IconEventController graphicsPanel;
     private JPanel mainPanel;
 
     private int MAX_TIME = 500;
     public int time = MAX_TIME;
     public JLabel lbScore;
+    public JLabel lbShuffleCount;
     private JProgressBar progressTime;
     private JButton btnNewGame;
     private JButton btnShuffle;
@@ -56,7 +57,7 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
             protected void paintComponent(Graphics g) {
                 // Image backgroudImage = ImageIO.read(new File("src/com/pokemon/background/bgpikachu2.png"));
                 ImageIcon icon = new ImageIcon("src/com/pokemon/background/bgpikachu2.png");
-                Dimension d = getSize();                
+                Dimension d = getSize();        
                 g.drawImage(icon.getImage(), 0, 0, this);
                 setOpaque(false);
                 super.paintComponent(g);
@@ -110,6 +111,7 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
         UIManager.put("ProgressBar[Enabled+Indeterminate].foregroundPainter", painter);
 
         lbScore = new JLabel("0");
+        lbShuffleCount = new JLabel("10");
         progressTime = new JProgressBar(JProgressBar.VERTICAL, 0, 100);
         progressTime.setValue(100);
 
@@ -131,12 +133,21 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
         panelScoreAndTime.add(panelLeft, BorderLayout.WEST);
         panelScoreAndTime.add(panelCenter, BorderLayout.CENTER);
 
+        JPanel shufflePanel = new JPanel();
+        shufflePanel.setLayout(new BoxLayout(shufflePanel, BoxLayout.PAGE_AXIS));
+        shufflePanel.setOpaque(false);
+        shufflePanel.add(btnShuffle = createButton("Shuffle"));
+        shufflePanel.add(new JLabel("Shuffle Count: "));
+        shufflePanel.add(lbShuffleCount);
+        lbShuffleCount.setBorder(new EmptyBorder(10, 0, 0, 0));
+
         JPanel panelControl = new JPanel(new BorderLayout(10, 10));
         panelControl.setOpaque(false);
         panelControl.setBorder(new EmptyBorder(10, 3, 5, 3));
         panelControl.add(panelScoreAndTime, BorderLayout.CENTER);
         panelControl.add(btnNewGame = createButton("New Game"), BorderLayout.PAGE_END);
-        panelControl.add(btnShuffle = createButton("Shuffle"), BorderLayout.PAGE_START);
+        panelControl.add(shufflePanel, BorderLayout.PAGE_START);
+        // panelControl.add(btnShuffle = createButton("Shuffle"), BorderLayout.PAGE_START);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -166,14 +177,19 @@ public class FrameController extends JFrame implements ActionListener, Runnable 
         mainPanel.validate();
         mainPanel.setVisible(true);
         lbScore.setText("0");
+        lbShuffleCount.setText("10");
     }
 
     public void continueGame() {
+        // System.out.println(progressTime.getValue());
+        int score = graphicsPanel.getScore() + progressTime.getValue();
+        graphicsPanel.setScore(score);
         time = MAX_TIME;
         graphicsPanel.removeAll();
         mainPanel.add(continueGraphicsPanel(), BorderLayout.CENTER);
         mainPanel.validate();
         mainPanel.setVisible(true);
+        lbScore.setText(String.valueOf(score));
     }
 
     public void showDialogNewGame(String message, String title, int t) {

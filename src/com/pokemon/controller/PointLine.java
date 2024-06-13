@@ -11,4 +11,10 @@ public class PointLine {
         this.p1 = p1;
         this.p2 = p2;
     }
+
+    public String toString() {
+        String string = "(" + p1.x + "," + p1.y + ") and (" + p2.x + "," + p2.y
+                + ")";
+        return string;
+    }
 }
